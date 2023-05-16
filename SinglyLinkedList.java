@@ -16,8 +16,8 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	/* No-args Constructors */
 	public SinglyLinkedList() 
 	{
-		head = new ListNode<E>(null,null);
-		tail = new ListNode<E>(null,null);
+		head = null;//new ListNode<E>(null,null);
+		tail = null;//new ListNode<E>(null,null);
 	}
 	
 	/** Copy constructor */
@@ -26,8 +26,8 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	/**	Clears the list of elements */
 	public void clear() 
 	{
-		head = new ListNode<E>(null,null);
-		tail = new ListNode<E>(null,null);
+		head = null; //new ListNode<E>(null,null);
+		tail = null; //new ListNode<E>(null,null);
 	}
 	
 	/**	Add the object to the end of the list
@@ -36,6 +36,11 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 */
 	public boolean add(E obj) 
 	{
+		//~ if(size() == 0)
+		//~ {
+			//~ head = new ListNode<E>(obj,null);
+			//~ return true;
+		//~ }
 		if(head != null && head.getValue()!= null)
 		{
 			tail.setNext(new ListNode<E>(obj,null));
@@ -56,13 +61,28 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 *	@throws NoSuchElementException if index does not exist
 	 */
 	public boolean add(int index, E obj) {
-		return false;
+		
+		if(index == 0)
+		{
+			head = new ListNode<E>(obj,head);
+			return true;
+		}
+		if(index < 0 || index >= size())
+		{
+			System.out.println("ERROR: No index at " + index);
+			return false;
+		}
+		ListNode<E> node = get(index-1);
+		node.setNext(new ListNode<E>(obj,node.getNext()));
+		return true;
 	}
 	
 	/**	@return the number of elements in this list */
 	public int size() {
 		ListNode<E> node = head;
 		int counter = 0;
+		if(head == null) 
+			return 0;
 		if(node.getNext() != null)
 			counter++;
 		while(node.getNext() != null)
@@ -140,24 +160,38 @@ public class SinglyLinkedList<E extends Comparable<E>>
 		ListNode<E> node = head;
 		ListNode<E> temp = head;
 		if(index < 0 || index >= size())
-			throw new NoSuchElementException();
+		{
+			System.out.println(size() + "size");
+			if(size() == 1)
+				head = null;
+			//System.out.println(size() + " " + head);
+			//System.out.println("ERROR: no index = " + index);
+			return null;
+		}
+			//throw new NoSuchElementException();
+		//System.out.println(size() + " " + head);
 		if(index == 0)
 		{
+			//~ if(size() == 1)
+			//~ {
+				//~ head = null; //new ListNode<E>(null,null);
+				//~ tail = null; //new ListNode<E>(null,null);
+			//~ }
+			//~ else
 			head = head.getNext();
 			return node.getValue();
 		}
 		for(int i = 0; i < index-1; i++)
 			node = node.getNext();
 		temp = node.getNext();
-		node = node.getNext().getNext();
+		node.setNext(node.getNext().getNext());
 		return temp.getValue();
 	}
 	
 	/**	@return	true if list is empty; false otherwise */
 	public boolean isEmpty() {
-		if(head == null)
-			return true;
-		return false;
+		System.out.println(head.getValue());
+		return head == null;
 	}
 	
 	/**	Tests whether the list contains the given object
@@ -166,6 +200,8 @@ public class SinglyLinkedList<E extends Comparable<E>>
 	 */
 	public boolean contains(E object) {
 		ListNode<E> node = head;
+		if(head == null)
+			return false;
 		while(node.getNext() != null)
 		{
 			if(node.getValue().compareTo(object) == 0)
